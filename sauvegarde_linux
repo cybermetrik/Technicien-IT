@@ -1,0 +1,34 @@
+#!/bin/bash
+
+echo "----------------------------------------------------"
+echo "Démarrage de la sauvegarde du systeme linux"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+
+cd /root
+Date=$(date +%d-%m-%Y)
+tar cvpjf backup-$Date.tar.bz2 --exclude=backup-$Date.tar.bz2 --exclude=/boot --exclude=/sys --exclude=/proc --exclude=/mnt /
+
+clear
+echo "Vérification de l'existence de l'archive";
+if [ -e backup-$Date.tar.bz2 ]
+  then
+    echo "----------------------------------------------------"
+    echo "Votre archive a bien été créée.";
+    echo "----------------------------------------------------"
+    read -p "Appuyez sur une touche pour quitter..."
+  else
+    echo "----------------------------------------------------"
+    echo "Erreur lors de la création de l'archive.";
+    echo "----------------------------------------------------"
+    read -p "Appuyez sur une touche pour recommencer..."
+fi
+
+echo "----------------------------------------------------"
+echo "Fin de la sauvegarde du systeme linux"
+echo "----------------------------------------------------"
+
+# fdisk -l
+# mkdir /dev/sd*1 /mnt/USB
+# mount /dev/sd*1 /mnt/USB
+# Restauration tar xvpfj /mnt/USB/backup-$Date.tar.bz2 -C /
