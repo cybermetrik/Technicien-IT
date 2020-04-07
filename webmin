@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "----------------------------------------------------"
+echo "Installation de Webmin"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+apt-get update && apt-get upgrade
+apt-get install gpg libwww-perl libnet-http-perl
+
+echo "deb http://download.webmin.com/download/repository sarge contrib" >> /etc/apt/sources.list
+echo "deb http://webmin.mirror.somersettechsolutions.co.uk/repository sarge contrib" >> /etc/apt/sources.list
+
+wget http://www.webmin.com/jcameron-key.asc
+apt-key add jcameron-key.asc
+
+apt-get update && apt-get upgrade
+apt-get install webmin
