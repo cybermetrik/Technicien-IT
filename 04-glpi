@@ -1,0 +1,49 @@
+#!/bin/bash
+
+###########################################################################
+version_gpli="9.4.5"                
+GPLI_database="A REMPLIR"
+GPLI_user="A REMPLIR"
+GPLI_password="A REMPLIR"
+
+mysql_server="A REMPLIR"
+password_server="A REMPLIR"
+###########################################################################
+
+# NE PAS TOUCHER A PARTIR D'ICI !!!!!!!!
+echo "----------------------------------------------------"
+echo "Mise à Jour du Serveur Linux"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+apt-get update && apt-get upgrade
+
+echo "----------------------------------------------------"
+echo "Installation du Serveur GPLI"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+apt-get install apcupsd
+
+mysql -u${mysql_server} -p${password_server} -e "create database ${GPLI_database} character set utf8"
+mysql -u${mysql_server} -p${password_server} -e "grant all privileges on ${GPLI_database}.* to '${GPLI_user}'@'localhost' identified by '${GPLI_password}'"
+mysql -u${mysql_server} -p${password_server} -e "flush privileges"
+
+cd /usr/src/
+wget https://github.com/glpi-project/glpi/releases/download/${version_gpli}/glpi-${version_gpli}.tgz
+tar -xvzf glpi-${version_gpli}.tgz -C /var/www/html
+chown -R www-data /var/www/html/glpi/
+
+echo "----------------------------------------------------"
+echo "Installation du Plugin FusionInventory"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+cd /usr/src
+wget https://github.com/fusioninventory/fusioninventory-for-glpi/archive/glpi9.4+2.1.tar.gz
+tar -zxvf glpi9.4+2.1.tar.gz -C /var/www/html/glpi/plugins
+chown -R www-data /var/www/html/glpi/plugins
+cd /var/www/html/glpi/plugins
+mv fusioninventory-for-glpi-glpi9.4-2.1/ fusioninventory/
+
+crontab < <(crontab -u www-data -l ; echo "*/1 * * * * /usr/bin/php/7.3 /var/www/html/glpi/front/cron.php &>/dev/null")
+/etc/init.d/cron restart
+
+systemctl restart apache2
