@@ -7,7 +7,7 @@ Automatisation de l'installation et la configuration des applications serveur su
 3. ./(le_fichier)
 
 # Contact
-site web : ...\n
-linkedin : https://www.linkedin.com/in/florian-tobiasz/ \n
-email    : cybermetrik@gmail.com \n
-           florian.tobiasz@gmail.com \n
+Site web : ...
+Linkedin : https://www.linkedin.com/in/florian-tobiasz/ 
+Email    : cybermetrik@gmail.com 
+           florian.tobiasz@gmail.com 
