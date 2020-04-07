@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "----------------------------------------------------"
+echo "Installation de FTP + SSL"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+apt-get update && apt-get upgrade
+apt-get install proftpd
+
+openssl req -x509 -newkey rsa:2048 \ -keyout /etc/ssl/private/proftpd.key -out /etc/ssl/certs/proftpd.crt \ -nodes -days 3650
+
+sed -i 's/#include tls.conf/include tls.conf/g' /etc/proftpd/proftpd.conf
+sed -i 's/#TLSEngine on/TLSEngine on/g' /etc/proftpd/tls.conf
+sed -i 's/#TLSLog \/var\/log\/proftpd\/tls.log/TLSLog \/var\/log\/proftpd\/tls.log/g' /etc/proftpd/tls.conf
+sed -i 's/#TLSProtocol SSLv23/TLSProtocol SSLv23/g' /etc/proftpd/tls.conf
+
+sed -i 's/#CertificateFile : \/etc\/ssl\/certs\/ssl-cert-snakeoil.pem/CertificateFile : \/etc\/ssl\/certs\/ssl-cert-snakeoil.pem/g' /etc/proftpd/tls.conf
+sed -i 's/#CertificateKeyFile : \/etc\/ssl\/private\/ssl-cert-snakeoil.key/CertificateKeyFile : \/etc\/\ssl\/private\/ssl-cert-snakeoil.key/g' /etc/proftpd/tls.conf
+
+sed -i 's/#TLSOptions AllowClientRenegotations/TLSOptions AllowClientRenegotations/g'/etc/proftpd/tls.conf
+sed -i 's/#TLSVerifyClient on/TLSVerifyClient on/g' /etc/proftpd/tls.conf
+sed -i 's/#TLSRequired on/TLSRequired on/g' /etc/proftpd/tls.conf
+
+systemctl restart proftpd
