@@ -1,0 +1,51 @@
+#!/bin/bash
+
+echo "----------------------------------------------------"
+echo "Mise à jour du serveur"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+apt-get update && apt-get upgrade
+
+echo "----------------------------------------------------"
+echo "Installation des sécurités du serveur"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+apt-get install iptables portsentry fail2ban snort rkhunter
+
+sed -i 's/KILL_HOSTS_DENY/#KILL_HOSTS_DENY/g' /etc/portsentry/portsentry.conf
+sed -i 's/#KILL_ROUTE="\/sbin\/iptables -I INPUT -s $TARGET$ -j DROP"/KILL_ROUTE="\/sbin\/iptables -I INPUT -s $TARGET$ -j DROP"/g' /etc/portsentry/portsentry.conf
+
+portsentry –audp
+portsentry –atcp
+
+/etc/init.d/fail2ban restart
+
+sed -i 's/CRON_DAILY_RUN=""/CRON_DAILY_RUN="yes"/g' /etc/default/rkhunter
+sed -i 's/CRON_DB_UPDATE=""/CRON_DB_UPDATE="yes"/g' /etc/default/rkhunter
+
+crontab < <(crontab -l ; echo "0 0 * * * rkhunter -c")
+
+wget https://snort.org/downloads/community/community-rules.tar.gz
+tar zxvf community-rules.tar.gz
+cp community-rules/community-rules /etc/snort/rules
+rm -rf community-rules.tar.gz
+echo "include $RULE_PATH/community.rules" >> /etc/snort/snort.conf
+
+echo "[Unit]
+Description=Lancer Snort NIDS
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=snort -q -c /etc/snort/snort.conf -i enp0s3
+
+[Install]
+WantedBy=multi-user.target" > /lib/systemd/system/snort.service
+systemctl daemon-reload
+systemctl start snort
+systemctl status snort
+
+cp iptables.sh /etc/init.d/iptables.sh
+chmod +x /etc/init.d/iptables.sh
+/etc/init.d/iptables.sh
+update-rc.d iptables.sh defaults
