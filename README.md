@@ -12,5 +12,4 @@ Site web : ...
 Linkedin : https://www.linkedin.com/in/florian-tobiasz/ 
 
 Email    : cybermetrik@gmail.com 
-
            florian.tobiasz@gmail.com 
