@@ -1,0 +1,63 @@
+#!/bin/bash
+
+###########################################################################
+reseau="reseau.fr"
+ip="192.168.42.246"
+ipp="db.192.168.42"
+ip_inverse="42.168.192"
+document_root="db.reseau.fr"
+email="admin.reseau.fr"
+###########################################################################
+
+echo "----------------------------------------------------"
+echo "Installation et configuration de samba + raid 1"
+echo "----------------------------------------------------"
+read -p "Appuyez sur une touche pour continuer..."
+
+apt-get install bind9 
+
+echo "zone "${reseau}" {
+                type master;
+                file "/etc/bind/${document_root}";
+        };
+        
+zone "${ip_inverse}.in-addr.arpa." {
+        type master;
+        file "/etc/bind/${iip}";
+};
+" >> /etc/bind/named.conf
+
+echo "$TTL 604800     ; 1 semaine
+$ORIGIN ${reseau}.
+@       IN SOA  ns1.${reseau}. ${email}. (
+                                2013020905 ;serial
+                                3600       ; refresh (1 hour)
+                                3000       ; retry (50 minutes)
+                                4619200    ; expire (7 weeks 4 days 11 hours 6 minutes 40 seconds)
+                                604800     ; minimum (1 week)
+                                )
+
+@               IN      NS      ns1.${reseau}.
+ns1             IN      A       ${ip}
+tuto            IN      A       ${ip}
+www             IN      A       ${ip}
+nagios          IN      CNAME   www
+glpi            IN      CNAME   www" > ${document_root}
+
+echo "$TTL 604800     ; 1 semaine
+$ORIGIN ${ip_inverse}.in-addr.arpa.
+@       IN SOA  ns1.${reseau}. ${email}. (
+                                2013020905 ;serial
+                                3600       ; refresh (1 hour)
+                                3000       ; retry (50 minutes)
+                                4619200    ; expire (7 weeks 4 days 11 hours 6 minutes 40 seconds)
+                                604800     ; minimum (1 week)
+                                )
+
+@                 IN      NS        ns1.${reseau}.
+246               IN      PTR       ns1.${reseau}.
+246               IN      PTR       nagios.${reseau}.
+246               IN      PTR       glpi.${reseau}.
+246               IN      PTR       www.${reseau}." > /etc/bind/${ipp}
+
+systemctl restart bind9
