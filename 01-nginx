@@ -4,7 +4,6 @@
 virtualhost="A REMPLI"
 server_name="A REMPLI"
 document_root="A REMPLIR"
-email="A REMPLIR"
 ###########################################################################
 
 echo "----------------------------------------------------"
@@ -21,17 +20,11 @@ echo "upstream backend_apache{
 server {
     listen    80;
     server_name    ${server_name};
-	return 301 https://$host$request_uri;
-}
-
-server {
-    listen 443 ssl;
-    ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem
-    ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key
-	
-	location / {
-		include proxy_params;
-		proxy_pass http://backend_apache;
+    root ${document_root}
+    
+    location / {
+	include proxy_params;
+	proxy_pass http://backend_apache;
     }
 }" > /etc/nginx/sites-available/01-${virtualhost}.conf
 
