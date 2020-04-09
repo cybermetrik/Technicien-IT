@@ -26,7 +26,7 @@ server {
 	include proxy_params;
 	proxy_pass http://backend_apache;
     }
-}" > /etc/nginx/sites-available/01-${virtualhost}.conf
+}" > /etc/nginx/sites-available/${virtualhost}.conf
 
-ln -s /etc/nginx/sites-available/01-www.example.com.conf /etc/nginx/sites-enabled/01-www.example.com.conf
+ln -s /etc/nginx/sites-available/${virtualhost}.conf /etc/nginx/sites-enabled/${virtualhost}.conf
 systemctl reload nginx
