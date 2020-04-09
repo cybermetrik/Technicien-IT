@@ -24,6 +24,8 @@ systemctl restart apache2
 
 mkdir /var/www/html/${document_root}
 
+#letsencrypt certonly --standalone --agree-tos --email ${email} -d ${serveur_name} --standalone-supported-challenges http-01
+
 echo "<VirtualHost 127.0.0.1:8080>
     ServerName ${server_name}
     ServerAlias ${server_name}
@@ -55,7 +57,7 @@ echo "<VirtualHost 127.0.0.1:8080>
 		</VirtualHost>
 	</IfModule>" > /etc/apache2/sites-available/01-${virtualhost}.conf
 
-a2ensite 01-${virtualhost}.conf
+a2ensite ${virtualhost}.conf
 systemctl reload apache2
 
 mysql_secure_installation
