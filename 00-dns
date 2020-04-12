@@ -10,7 +10,7 @@ email="admin.reseau.fr"
 ###########################################################################
 
 echo "----------------------------------------------------"
-echo "Installation et configuration de samba + raid 1"
+echo "Installation et configuration de Bind9"
 echo "----------------------------------------------------"
 read -p "Appuyez sur une touche pour continuer..."
 
