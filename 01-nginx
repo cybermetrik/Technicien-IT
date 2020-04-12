@@ -13,6 +13,8 @@ read -p "Appuyez sur une touche pour continuer..."
 apt-get update && apt-get upgrade
 apt-get install nginx libapache2-mod-rpaf
 
+openssl req -new -x509 -days 3650 -nodes -newkey rsa:4096 -out /etc/ssl/certs/proxy.pem -keyout /etc/ssl/private/proxy.pem
+
 echo "upstream backend_apache{
     server 127.0.0.1:8080;
 }
@@ -20,11 +22,17 @@ echo "upstream backend_apache{
 server {
     listen    80;
     server_name    ${server_name};
-    root ${document_root}
-    
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    ssl_certificate /etc/ssl/certs/proxy.pem
+    ssl_certificate_key /etc/ssl/private/proxy.pem
+
     location / {
-	include proxy_params;
-	proxy_pass http://backend_apache;
+        include proxy_params;
+        proxy_pass http://backend_apache;
     }
 }" > /etc/nginx/sites-available/${virtualhost}.conf
 
