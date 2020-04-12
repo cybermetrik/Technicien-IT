@@ -24,7 +24,7 @@ systemctl restart apache2
 
 mkdir /var/www/html/${document_root}
 
-#letsencrypt certonly --standalone --agree-tos --email ${email} -d ${serveur_name} --standalone-supported-challenges http-01
+openssl req -new -x509 -days 3650 -nodes -newkey rsa:4096 -out /etc/ssl/certs/https.pem -keyout /etc/ssl/private/https.pem
 
 echo "<VirtualHost 127.0.0.1:8080>
     ServerName ${server_name}
@@ -52,8 +52,8 @@ echo "<VirtualHost 127.0.0.1:8080>
 #	<IfModule mod_ssl.c>
 #		<VirtualHost 127.0.0.1:443>
 #			SSLEngine On
-#			SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
-#			SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+#			SSLCertificateFile     /etc/ssl/certs/https.pem
+#			SSLCertificateKeyFile   /etc/ssl/private/https.pem
 #		</VirtualHost>
 #	</IfModule>" > /etc/apache2/sites-available/01-${virtualhost}.conf
 
