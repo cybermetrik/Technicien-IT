@@ -7,5 +7,4 @@ Automatisation de l'installation et la configuration des applications serveur su
 3. ./(le_fichier)
 
 # Contact
-Site web : ...
 Email    : cybermetrik@gmail.com
