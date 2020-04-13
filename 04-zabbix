@@ -12,8 +12,6 @@ echo "----------------------------------------------------"
 read -p "Appuyez sur une touche pour continuer..."
 
 apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-agent snmpd
-sed -i -e 's/START\=no/START\=yes/g' /etc/default/zabbix-server
-
 
 mysql -u root -p -e "create database ${database} character set utf8"
 mysql -u root -p -e "grant all privileges on ${database}.* to ${username}@localhost identified by '${password}'"
@@ -22,16 +20,6 @@ mysql -u root -p -e "flush privileges"
 zcat /usr/share/zabbix-server-mysql/schema.sql.gz | mysql -u zabbix -pzabbix zabbix
 zcat /usr/share/zabbix-server-mysql/images.sql.gz | mysql -u zabbix -pzabbix zabbix
 zcat /usr/share/zabbix-server-mysql/data.sql.gz | mysql -u zabbix -pzabbix zabbix
-
-echo "LogFile=/var/log/zabbix-server/zabbix-server.log/zabbix-server/zabbix-server
-PidFile=/var/run/zabbix/zabbix-server.pid
-DBHost=localhost
-DBName=${database}
-DBPassword=${password}
-DBSocket=/var/run/mysqld/mysqld.sock
-DBPort=3306" > /etc/zabbix/zabbix_server.conf
-
-systemctl restart zabbix-server
 
 echo "<IfModule mod_alias.c>
     Alias /zabbix /usr/share/zabbix
@@ -46,15 +34,4 @@ echo "<IfModule mod_alias.c>
 </Directory>" > /etc/apache2/conf-available/zabbix-server.conf
 
 a2enconf zabbix-server
-
-echo "nano /etc/php/7.3/apache2/php.ini
-
-max_execution_time = 600
-max_input_time = 600
-memory_limit = 256M
-post_max_size = 32M
-upload_max_filesize = 16M
-date.timezone = \"Europe/Paris\"
-systemctl restart apache2" > A_lire.txt
-
-
+systemctl restart zabbix-server
