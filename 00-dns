@@ -39,9 +39,8 @@ $ORIGIN ${reseau}.
 
 @               IN      NS      ns1.${reseau}.
 ns1             IN      A       ${ip}
-tuto            IN      A       ${ip}
 www             IN      A       ${ip}
-nagios          IN      CNAME   www
+zabbix          IN      CNAME   www
 glpi            IN      CNAME   www" > ${document_root}
 
 echo "$TTL 604800     ; 1 semaine
@@ -56,8 +55,8 @@ $ORIGIN ${ip_inverse}.in-addr.arpa.
 
 @                 IN      NS        ns1.${reseau}.
 246               IN      PTR       ns1.${reseau}.
-246               IN      PTR       nagios.${reseau}.
+246               IN      PTR       www.${reseau}.
 246               IN      PTR       glpi.${reseau}.
-246               IN      PTR       www.${reseau}." > /etc/bind/${ipp}
+246               IN      PTR       zabbix.${reseau}." > /etc/bind/${ipp}
 
 systemctl restart bind9
