@@ -36,12 +36,12 @@ echo "<VirtualHost 127.0.0.1:8080>
 
     CustomLog ${APACHE_LOG_DIR}/www.${document_root}-access.log combined
     ErrorLog ${APACHE_LOG_DIR}/www.${document_root}-error.log
-    
-#    <IfModule mod_rewrite.c>
-#        RewriteEngine On
-#        RewriteCond %{HTTPS} !=on
-#        RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,QSA,R=permanent]
-#    </IfModule>
+  
+    <IfModule mod_rewrite.c>
+         RewriteEngine On
+         RewriteCond %{HTTPS} !=on
+         RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,QSA,R=permanent]
+    </IfModule>
 	
     <Directory /var/www/html/${document_root}>
         Options All
@@ -49,13 +49,13 @@ echo "<VirtualHost 127.0.0.1:8080>
     </Directory>
 	</VirtualHost>
 	
-#	<IfModule mod_ssl.c>
-#		<VirtualHost 127.0.0.1:443>
-#			SSLEngine On
-#			SSLCertificateFile     /etc/ssl/certs/https.pem
-#			SSLCertificateKeyFile   /etc/ssl/private/https.pem
-#		</VirtualHost>
-#	</IfModule>" > /etc/apache2/sites-available/01-${virtualhost}.conf
+	<IfModule mod_ssl.c>
+		<VirtualHost 127.0.0.1:443>
+			SSLEngine On
+			SSLCertificateFile     /etc/ssl/certs/https.pem
+			SSLCertificateKeyFile   /etc/ssl/private/https.pem
+		</VirtualHost>
+	</IfModule>" > /etc/apache2/sites-available/01-${virtualhost}.conf
 
 a2ensite ${virtualhost}.conf
 systemctl reload apache2
