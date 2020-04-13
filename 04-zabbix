@@ -17,9 +17,9 @@ mysql -u root -p -e "create database ${database} character set utf8"
 mysql -u root -p -e "grant all privileges on ${database}.* to ${username}@localhost identified by '${password}'"
 mysql -u root -p -e "flush privileges"
 
-zcat /usr/share/zabbix-server-mysql/schema.sql.gz | mysql -u zabbix -pzabbix zabbix
-zcat /usr/share/zabbix-server-mysql/images.sql.gz | mysql -u zabbix -pzabbix zabbix
-zcat /usr/share/zabbix-server-mysql/data.sql.gz | mysql -u zabbix -pzabbix zabbix
+gzip -d /usr/share/zabbix-server-mysql/schema.sql.gz | mysql -u zabbix -pzabbix zabbix < schema.sql
+gzip -d /usr/share/zabbix-server-mysql/images.sql.gz | mysql -u zabbix -pzabbix zabbix < images.sql
+gzip -d /usr/share/zabbix-server-mysql/data.sql.gz | mysql -u zabbix -pzabbix zabbix < data.sql
 
 echo "<IfModule mod_alias.c>
     Alias /zabbix /usr/share/zabbix
