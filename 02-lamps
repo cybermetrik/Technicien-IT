@@ -5,6 +5,7 @@ virtualhost="cybermetrik"
 server_name="www.cybermetrik.com"
 document_root="cybermetrik"
 email="cybermetrik@gmail.com"
+ip="192.168.42.10"
 ###########################################################################
 
 # NE PAS TOUCHER A PARTIR D'ICI !!!!!!!!
@@ -37,11 +38,7 @@ echo "<VirtualHost 127.0.0.1:8080>
          CustomLog ${APACHE_LOG_DIR}/www.${document_root}-access.log combined
          ErrorLog ${APACHE_LOG_DIR}/www.${document_root}-error.log
   
-         <IfModule mod_rewrite.c>
-              RewriteEngine On
-              RewriteCond %{HTTPS} !=on
-              RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,QSA,R=permanent]
-          </IfModule>
+         Redirect permanent / https://${ip}/
 	
          <Directory /var/www/html/${document_root}>
               Options All
