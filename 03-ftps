@@ -14,8 +14,8 @@ sed -i 's/#TLSEngine on/TLSEngine on/g' /etc/proftpd/tls.conf
 sed -i 's/#TLSLog \/var\/log\/proftpd\/tls.log/TLSLog \/var\/log\/proftpd\/tls.log/g' /etc/proftpd/tls.conf
 sed -i 's/#TLSProtocol SSLv23/TLSProtocol SSLv23/g' /etc/proftpd/tls.conf
 
-sed -i 's/#CertificateFile : \/etc\/ssl\/certs\/ftps.pem/CertificateFile : \/etc\/ssl\/certs\/ssl-cert-snakeoil.pem/g' /etc/proftpd/tls.conf
-sed -i 's/#CertificateKeyFile : \/etc\/ssl\/private\/ftps.pem/CertificateKeyFile : \/etc\/\ssl\/private\/ssl-cert-snakeoil.key/g' /etc/proftpd/tls.conf
+sed -i 's/#CertificateFile : \/etc\/ssl\/certs\/ftps.pem/CertificateFile : \/etc\/ssl\/certs\/ftps.pem/g' /etc/proftpd/tls.conf
+sed -i 's/#CertificateKeyFile : \/etc\/ssl\/private\/ftps.pem/CertificateKeyFile : \/etc\/\ssl\/private\/ftps.pem/g' /etc/proftpd/tls.conf
 
 sed -i 's/#TLSOptions AllowClientRenegotations/TLSOptions AllowClientRenegotations/g'/etc/proftpd/tls.conf
 sed -i 's/#TLSVerifyClient on/TLSVerifyClient on/g' /etc/proftpd/tls.conf
