@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ###########################################################################
-virtualhost="A REMPLIR"
-server_name="A REMPLIR"
-document_root="A REMPLIR"
-email="A REMPLIR"
+virtualhost="cybermetrik"
+server_name="www.cybermetrik.com"
+document_root="cybermetrik"
+email="cybermetrik@gmail.com"
 ###########################################################################
 
 # NE PAS TOUCHER A PARTIR D'ICI !!!!!!!!
@@ -47,17 +47,19 @@ echo "<VirtualHost 127.0.0.1:8080>
               Options All
               AllowOverride None
          </Directory>
-     </VirtualHost>
-	
-     <IfModule mod_ssl.c>
+     </VirtualHost>" > /etc/apache2/sites-available/http-${virtualhost}.conf
+
+echo "<IfModule mod_ssl.c>
           <VirtualHost 127.0.0.1:443>
 		SSLEngine On
 		SSLCertificateFile     /etc/ssl/certs/https.pem
 		SSLCertificateKeyFile   /etc/ssl/private/https.pem
 	   </VirtualHost>
-      </IfModule>" > /etc/apache2/sites-available/01-${virtualhost}.conf
+      </IfModule>" > /etc/apache2/sites-available/https-${virtualhost}.conf
+      
+a2ensite http-${virtualhost}.conf
+a2ensite https-${virtualhost}.conf
 
-a2ensite ${virtualhost}.conf
 systemctl reload apache2
 
 mysql_secure_installation
