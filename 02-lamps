@@ -27,35 +27,35 @@ mkdir /var/www/html/${document_root}
 openssl req -new -x509 -days 3650 -nodes -newkey rsa:4096 -out /etc/ssl/certs/https.pem -keyout /etc/ssl/private/https.pem
 
 echo "<VirtualHost 127.0.0.1:8080>
-    ServerName ${server_name}
-    ServerAlias ${server_name}
-    ServerAdmin webmaster@${server_name}
+          ServerName ${server_name}
+          ServerAlias ${server_name}
+          ServerAdmin webmaster@${server_name}
 	
-    DocumentRoot /var/www/html/${document_root}
-    ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/run/php/php7.3-fpm.sock|fcgi://localhost/var/www/html/${document_root}
+          DocumentRoot /var/www/html/${document_root}
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/run/php/php7.3-fpm.sock|fcgi://localhost/var/www/html/${document_root}
 
-    CustomLog ${APACHE_LOG_DIR}/www.${document_root}-access.log combined
-    ErrorLog ${APACHE_LOG_DIR}/www.${document_root}-error.log
+         CustomLog ${APACHE_LOG_DIR}/www.${document_root}-access.log combined
+         ErrorLog ${APACHE_LOG_DIR}/www.${document_root}-error.log
   
-    <IfModule mod_rewrite.c>
-         RewriteEngine On
-         RewriteCond %{HTTPS} !=on
-         RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,QSA,R=permanent]
-    </IfModule>
+         <IfModule mod_rewrite.c>
+              RewriteEngine On
+              RewriteCond %{HTTPS} !=on
+              RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,QSA,R=permanent]
+          </IfModule>
 	
-    <Directory /var/www/html/${document_root}>
-        Options All
-        AllowOverride None
-    </Directory>
-	</VirtualHost>
+         <Directory /var/www/html/${document_root}>
+              Options All
+              AllowOverride None
+         </Directory>
+     </VirtualHost>
 	
-	<IfModule mod_ssl.c>
-		<VirtualHost 127.0.0.1:443>
-			SSLEngine On
-			SSLCertificateFile     /etc/ssl/certs/https.pem
-			SSLCertificateKeyFile   /etc/ssl/private/https.pem
-		</VirtualHost>
-	</IfModule>" > /etc/apache2/sites-available/01-${virtualhost}.conf
+     <IfModule mod_ssl.c>
+          <VirtualHost 127.0.0.1:443>
+		SSLEngine On
+		SSLCertificateFile     /etc/ssl/certs/https.pem
+		SSLCertificateKeyFile   /etc/ssl/private/https.pem
+	   </VirtualHost>
+      </IfModule>" > /etc/apache2/sites-available/01-${virtualhost}.conf
 
 a2ensite ${virtualhost}.conf
 systemctl reload apache2
