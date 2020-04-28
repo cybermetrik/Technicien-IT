@@ -38,7 +38,7 @@ mkdir /var/www/html/${document_root}
 
 openssl req -new -x509 -days 3650 -nodes -newkey rsa:4096 -out /etc/ssl/certs/https.pem -keyout /etc/ssl/private/https.pem
 
-echo "<VirtualHost *:8080>
+echo "<VirtualHost 127.0.0.1:8080>
           ServerName ${server_name}
           ServerAlias ${server_name}
           ServerAdmin ${email}
@@ -62,7 +62,7 @@ echo "<VirtualHost *:8080>
      </VirtualHost>" > /etc/apache2/sites-available/http-${virtualhost}.conf
 
 echo "<IfModule mod_ssl.c>
-          <VirtualHost *:443>
+          <VirtualHost 127.0.0.1:443>
           	ServerName ${server_name}
           	ServerAlias ${server_name}
 	  	ServerAdmin {email}
