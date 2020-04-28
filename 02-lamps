@@ -21,6 +21,7 @@ a2enconf php7.3-fpm
 a2dismod php7.3 mpm_prefork
 a2enmod mpm_event
 a2enmod ssl
+a2enmod rewire
 systemctl restart apache2
 
 mkdir /var/www/html/${document_root}
@@ -38,7 +39,11 @@ echo "<VirtualHost 127.0.0.1:8080>
          CustomLog ${APACHE_LOG_DIR}/www.${document_root}-access.log combined
          ErrorLog ${APACHE_LOG_DIR}/www.${document_root}-error.log
   
-         Redirect permanent / https://${ip}/
+	 <IfModule mod_rewrite.c>
+		RewriteEngine On
+		RewriteCond %{HTTPS} !=on
+	 	RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,QSA,R=permanent]
+	 </IfModule>
 	
          <Directory /var/www/html/${document_root}>
               Options All
