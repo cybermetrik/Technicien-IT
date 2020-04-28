@@ -53,9 +53,13 @@ echo "<VirtualHost 127.0.0.1:8080>
 
 echo "<IfModule mod_ssl.c>
           <VirtualHost 127.0.0.1:443>
+          	ServerName ${server_name}
+          	ServerAlias ${server_name}
 	  	ServerAdmin {email}
 	
 	        DocumentRoot /var/www/html/${document_root}
+		ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/run/php/php7.3-fpm.sock|fcgi://localhost/var/www/html/${document_root}
+		
          	CustomLog ${APACHE_LOG_DIR}/www.${document_root}-access.log combined
          	ErrorLog ${APACHE_LOG_DIR}/www.${document_root}-error.log
 		
