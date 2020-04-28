@@ -24,21 +24,11 @@ a2enmod ssl
 a2enmod rewrite
 systemctl restart apache2
 
-echo "Listen 127.0.0.1:8080
-
-<IfModule ssl_module>
-        Listen 127.0.0.1:443
-</IfModule>
-
-<IfModule mod_gnutls.c>
-	Listen 127.0.0.1:443
-</IfModule>" > /etc/apache2/ports.conf
-
 mkdir /var/www/html/${document_root}
 
 openssl req -new -x509 -days 3650 -nodes -newkey rsa:4096 -out /etc/ssl/certs/https.pem -keyout /etc/ssl/private/https.pem
 
-echo "<VirtualHost 127.0.0.1:8080>
+echo "<VirtualHost *:80>
           ServerName ${server_name}
           ServerAlias ${server_name}
           ServerAdmin ${email}
@@ -62,7 +52,7 @@ echo "<VirtualHost 127.0.0.1:8080>
      </VirtualHost>" > /etc/apache2/sites-available/http-${virtualhost}.conf
 
 echo "<IfModule mod_ssl.c>
-          <VirtualHost 127.0.0.1:443>
+          <VirtualHost *:443>
           	ServerName ${server_name}
           	ServerAlias ${server_name}
 	  	ServerAdmin {email}
