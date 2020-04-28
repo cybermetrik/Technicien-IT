@@ -21,7 +21,7 @@ a2enconf php7.3-fpm
 a2dismod php7.3 mpm_prefork
 a2enmod mpm_event
 a2enmod ssl
-a2enmod rewire
+a2enmod rewrite
 systemctl restart apache2
 
 mkdir /var/www/html/${document_root}
@@ -31,7 +31,7 @@ openssl req -new -x509 -days 3650 -nodes -newkey rsa:4096 -out /etc/ssl/certs/ht
 echo "<VirtualHost 127.0.0.1:8080>
           ServerName ${server_name}
           ServerAlias ${server_name}
-          ServerAdmin webmaster@${server_name}
+          ServerAdmin ${email}
 	
           DocumentRoot /var/www/html/${document_root}
           ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/run/php/php7.3-fpm.sock|fcgi://localhost/var/www/html/${document_root}
@@ -53,9 +53,20 @@ echo "<VirtualHost 127.0.0.1:8080>
 
 echo "<IfModule mod_ssl.c>
           <VirtualHost 127.0.0.1:443>
+	  	ServerAdmin {email}
+	
+	        DocumentRoot /var/www/html/${document_root}
+         	CustomLog ${APACHE_LOG_DIR}/www.${document_root}-access.log combined
+         	ErrorLog ${APACHE_LOG_DIR}/www.${document_root}-error.log
+		
 		SSLEngine On
 		SSLCertificateFile     /etc/ssl/certs/https.pem
 		SSLCertificateKeyFile   /etc/ssl/private/https.pem
+		
+	    	<Directory /var/www/html/${document_root}>
+              		Options All
+              		AllowOverride None
+	        </Directory>
 	   </VirtualHost>
       </IfModule>" > /etc/apache2/sites-available/https-${virtualhost}.conf
       
