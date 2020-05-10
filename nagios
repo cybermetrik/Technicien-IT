@@ -1,0 +1,47 @@
+#!/bin/bash
+
+apt-get install apache2 php php-gd php-imap php-curl php-mcrypt
+apt-get install libxml-libxml-perl libnet-snmp-perl libperl-dev libnumber-format-perl libconfig-inifiles-perl libdatetime-perl libnet-dns-perl
+apt-get install libpng-dev libjpeg-dev libgd-dev
+apt-get install gcc make autoconf libc6 unzip
+
+useradd nagios
+groupadd nagcmd
+usermod -a -G nagcmd nagios
+usermod -a -G nagcmd www-data
+
+mkdir /home/nagios/downloads
+cd /home/nagios/downloads
+wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.2.tar.gz
+tar -zxvf nagios-4.4.2.tar.gz
+rm -rf nagios-4.4.2.tar.gz
+cd nagios-4.4.2
+
+./configure --with-httpd-conf=/etc/apache2/sites-enabled --with-command-group=nagcmd
+make all
+make install
+make install-daemoninit
+make install-commandmode
+make install-config
+make install-webconf
+
+a2enmod rewrite
+a2enmod cgi
+htpasswd -cb /usr/local/nagios/etc/htpasswd.users nagiosadmin pass
+chown -R nagios:nagcmd /usr/local/nagios
+systemctl restart apache2
+systemctl start nagios
+
+cd /home/nagios/downloads
+wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
+tar -zxvf nagios-plugins-2.2.1.tar.gz
+rm -rf nagios-plugins-2.2.1.tar.gz
+cd nagios-plugins-2.2.1/
+
+./configure --with-nagios-user=nagios --with-nagios-group=nagcmd 
+make
+make install
+
+echo "alias testNagios='/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg'" >> /home/nagios/.bashrc
+echo "nagios ALL=NOPASSWD:/bin/systemctl restart nagios" >> /etc/sudoers
+echo "alias restartNagios='sudo systemctl restart nagios'" >> /home/nagios/.bashrc
