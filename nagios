@@ -1,10 +1,10 @@
 #!/bin/bash
 
-nagios_version=""
-naggios_plugin_version=""
+nagios_version="4.4.5"
+naggios_plugin_version="2.2.1"
 
-username_webpanel=""
-password_webpanel=""
+username_webpanel="admin"
+password_webpanel="admin"
 
 apt-get install apache2 php php-gd php-imap php-curl php-mcrypt
 apt-get install libxml-libxml-perl libnet-snmp-perl libperl-dev libnumber-format-perl libconfig-inifiles-perl libdatetime-perl libnet-dns-perl
