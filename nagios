@@ -1,5 +1,11 @@
 #!/bin/bash
 
+nagios_version=""
+naggios_plugin_version=""
+
+username_webpanel=""
+password_webpanel=""
+
 apt-get install apache2 php php-gd php-imap php-curl php-mcrypt
 apt-get install libxml-libxml-perl libnet-snmp-perl libperl-dev libnumber-format-perl libconfig-inifiles-perl libdatetime-perl libnet-dns-perl
 apt-get install libpng-dev libjpeg-dev libgd-dev
@@ -12,10 +18,10 @@ usermod -a -G nagcmd www-data
 
 mkdir /home/nagios/downloads
 cd /home/nagios/downloads
-wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.5.tar.gz
-tar -zxvf nagios-4.4.2.tar.gz
-rm -rf nagios-4.4.2.tar.gz
-cd nagios-4.4.2
+wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-${nagios_version}.tar.gz
+tar -zxvf nagios--${nagios_version}.tar.gz
+rm -rf nagios--${nagios_version}.tar.gz
+cd nagios--${nagios_version}
 
 ./configure --with-httpd-conf=/etc/apache2/sites-enabled --with-command-group=nagcmd
 make all
@@ -27,16 +33,16 @@ make install-webconf
 
 a2enmod rewrite
 a2enmod cgi
-htpasswd -cb /usr/local/nagios/etc/htpasswd.users nagiosadmin pass
+htpasswd -cb /usr/local/nagios/etc/htpasswd.users ${username_webpanel} ${password_webpanel}
 chown -R nagios:nagcmd /usr/local/nagios
 systemctl restart apache2
 systemctl start nagios
 
 cd /home/nagios/downloads
-wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
-tar -zxvf nagios-plugins-2.2.1.tar.gz
-rm -rf nagios-plugins-2.2.1.tar.gz
-cd nagios-plugins-2.2.1/
+wget https://nagios-plugins.org/download/nagios-plugins-${nagios_plugin_version}.tar.gz
+tar -zxvf nagios-plugins-${nagios_plugin_version}.tar.gz
+rm -rf nagios-plugins-${nagios_plugin_version}.tar.gz
+cd nagios-plugins-${nagios_plugin_version}/
 
 ./configure --with-nagios-user=nagios --with-nagios-group=nagcmd 
 make
