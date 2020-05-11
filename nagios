@@ -14,6 +14,7 @@ apt-get install libpng-dev libjpeg-dev libgd-dev
 apt-get install gcc make autoconf libc6 unzip
 
 useradd nagios
+passwd nagios
 groupadd nagcmd
 usermod -a -G nagcmd nagios
 usermod -a -G nagcmd www-data
