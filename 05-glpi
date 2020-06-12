@@ -33,20 +33,5 @@ wget https://github.com/glpi-project/glpi/releases/download/${version_gpli}/glpi
 tar -xvzf glpi-${version_gpli}.tgz -C /var/www/html
 chown -R www-data /var/www/html/glpi/
 
-echo "----------------------------------------------------"
-echo "Installation du Plugin FusionInventory"
-echo "----------------------------------------------------"
-read -p "Appuyez sur une touche pour continuer..."
-cd /usr/src
-wget https://github.com/fusioninventory/fusioninventory-for-glpi/archive/glpi${fusion}.tar.gz
-tar -zxvf glpi${fusion}.tar.gz -C /var/www/html/glpi/plugins
-chown -R www-data /var/www/html/glpi/plugins
-cd /var/www/html/glpi/plugins}
-mv fusioninventory-for-glpi-glpi9.4-2.1/ fusioninventory/
-
-crontab < <(crontab -u www-data -l ; echo "*/1 * * * * /usr/bin/php/7.3 /var/www/html/glpi/front/cron.php &>/dev/null")
-/etc/init.d/cron restart
-
-systemctl restart apache2
 cd /var/www/html/glpi/plugins
 git clone https://github.com/pluginsGLPI/mreporting.git
