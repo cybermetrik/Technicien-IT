@@ -1,7 +1,8 @@
 #!/bin/bash
 
 ###########################################################################
-version_gpli="9.4.5"                
+version_gpli="9.4.5"
+fusion="9.4+2.4"
 GPLI_database="A REMPLIR"
 GPLI_user="A REMPLIR"
 GPLI_password="A REMPLIR"
@@ -37,13 +38,15 @@ echo "Installation du Plugin FusionInventory"
 echo "----------------------------------------------------"
 read -p "Appuyez sur une touche pour continuer..."
 cd /usr/src
-wget https://github.com/fusioninventory/fusioninventory-for-glpi/archive/glpi9.4+2.1.tar.gz
-tar -zxvf glpi9.4+2.1.tar.gz -C /var/www/html/glpi/plugins
+wget https://github.com/fusioninventory/fusioninventory-for-glpi/archive/glpi${fusion}.tar.gz
+tar -zxvf glpi${fusion}.tar.gz -C /var/www/html/glpi/plugins
 chown -R www-data /var/www/html/glpi/plugins
-cd /var/www/html/glpi/plugins
+cd /var/www/html/glpi/plugins}
 mv fusioninventory-for-glpi-glpi9.4-2.1/ fusioninventory/
 
 crontab < <(crontab -u www-data -l ; echo "*/1 * * * * /usr/bin/php/7.3 /var/www/html/glpi/front/cron.php &>/dev/null")
 /etc/init.d/cron restart
 
 systemctl restart apache2
+cd /var/www/html/glpi/plugins
+git clone https://github.com/pluginsGLPI/mreporting.git
