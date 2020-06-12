@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###########################################################################
-version_gpli="9.4.5"
+version_gpli="9.5.0-rc1"
 fusion="9.4+2.4"
 GPLI_database="A REMPLIR"
 GPLI_user="A REMPLIR"
